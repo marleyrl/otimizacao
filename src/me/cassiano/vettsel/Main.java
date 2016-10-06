@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        VettselSimplex.get().run(getTestFunction(), getTestRestrictions());
+        VettselSimplex.get().run(getTestFunction(), getTestRestrictions()).printSolution();
     }
 
     private static Function getTestFunction() {

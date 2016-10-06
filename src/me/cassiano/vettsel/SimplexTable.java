@@ -1,6 +1,8 @@
 package me.cassiano.vettsel;
 
 
+import java.util.AbstractMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -12,6 +14,10 @@ import me.cassiano.vettsel.interfaces.Restriction;
 import me.cassiano.vettsel.interfaces.Table;
 
 public class SimplexTable {
+
+    public static final int BREAK_FLAG = -9182;
+    public static final int SOLUTION_UNLIMITED_FLAG = -1232;
+    public static final int SOLUTION_IMPOSSIBLE_FLAG = -2334;
 
     private Table table;
     private Function function;
@@ -26,7 +32,7 @@ public class SimplexTable {
         this.restrictions = restrictions;
 
         this.nonBasic = IntStream
-                .range(0, function.size())
+                .range(0, function.size() - 1)
                 .toArray();
 
         this.basic = IntStream
@@ -84,7 +90,7 @@ public class SimplexTable {
                 .flatMap(i -> IntStream.of(table.getCell(i, 0).getUpper() < 0 ? i : -1))
                 .filter(i -> i != -1)
                 .findFirst()
-                .orElse(-1);
+                .orElse(BREAK_FLAG);
     }
 
     public int getPermissibleColumnPosition(int line) {
@@ -98,7 +104,7 @@ public class SimplexTable {
                 .flatMap(i -> IntStream.of(table.getCell(line, i).getUpper() < 0 ? i : -1))
                 .filter(i -> i != -1)
                 .findAny()
-                .orElse(-1);
+                .orElse(SOLUTION_IMPOSSIBLE_FLAG);
 
     }
 
@@ -107,9 +113,25 @@ public class SimplexTable {
         return IntStream
                 .range(1, table.rows())
                 .filter(i -> table.getCell(i, column).getUpper() != 0)
-                .reduce((i, j) -> compareQuotients(i, j, column) ? j : i)
+                .filter(i -> sameSign(i, column))
+                .mapToObj(line -> new AbstractMap.SimpleEntry<>(line, calcQuotient(line, column)))
+                .min(Comparator.comparingDouble(AbstractMap.SimpleEntry::getValue))
+                .map(AbstractMap.SimpleEntry::getKey)
                 .orElse(-1);
+    }
 
+    public int getPositiveFunctionValuePosition() {
+
+        int position = IntStream
+                .range(0, table.columns())
+                .filter(x -> table.getCell(0, x).getUpper() >= 0)
+                .findAny()
+                .orElse(BREAK_FLAG);
+
+        if (position == 0)
+            position = SOLUTION_UNLIMITED_FLAG;
+
+        return position;
     }
 
     public void runSwapAlgorithm(int line, int column) {
@@ -128,17 +150,12 @@ public class SimplexTable {
         rearrangeTable(line, column);
         swapVariables(line, column);
 
-        ((TableImpl) table).print();
-
-
     }
 
     private void swapVariables(int line, int column) {
         int tempNonBasicVar = nonBasic[column - 1];
         nonBasic[column - 1] = basic[line - 1];
         basic[line - 1] = tempNonBasicVar;
-
-
     }
 
     private void rearrangeTable(int line, int column) {
@@ -170,9 +187,12 @@ public class SimplexTable {
                 cell.setLower(null);
             }
         }
+
+        printTable();
     }
 
     private void swapUpperLowerForSelected(int line, int column) {
+
         IntStream
                 .range(0, table.rows())
                 .mapToObj(x -> table.getCell(x, column))
@@ -241,12 +261,45 @@ public class SimplexTable {
 
     }
 
-    private boolean compareQuotients(int line1, int line2, int column) {
+    private Double calcQuotient(int line, int column) {
 
-        double freeMemberValue = table.getCell(line1, 0).getUpper();
-        double value1 = table.getCell(line1, column).getUpper() / freeMemberValue;
-        double value2 = table.getCell(line2, column).getUpper() / freeMemberValue;
+        double freeMemberValue = table.getCell(line, 0).getUpper();
+        return freeMemberValue / table.getCell(line, column).getUpper();
+    }
 
-        return value1 > value2;
+    private boolean sameSign(int line, int column) {
+
+        double freeMemberValue = table.getCell(line, 0).getUpper();
+        double value1 = table.getCell(line, column).getUpper();
+
+        return ((value1 > 0 && freeMemberValue > 0) ||
+                (value1 < 0 && freeMemberValue < 0));
+    }
+
+    public double[] getSolutionVariables() {
+
+        double[] values = new double[basic.length + nonBasic.length + 1];
+
+        values[0] = table.getCell(0, 0).getUpper();
+
+        IntStream
+                .range(0, basic.length)
+                .forEach(i -> {
+                    int index = basic[i] + 1;
+                    values[index] = table.getCell(i + 1, 0).getUpper();
+                });
+
+        IntStream
+                .range(0, nonBasic.length)
+                .forEach(i -> {
+                    int index = nonBasic[i] + 1;
+                    values[index] = table.getCell(0, i + 1).getUpper();
+                });
+
+        return values;
+    }
+
+    public void printTable() {
+        ((TableImpl) table).print();
     }
 }

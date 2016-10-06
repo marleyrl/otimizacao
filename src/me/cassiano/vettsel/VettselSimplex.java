@@ -3,8 +3,13 @@ package me.cassiano.vettsel;
 
 import java.util.List;
 
+import me.cassiano.vettsel.implementation.PartialSolutionImpl;
 import me.cassiano.vettsel.interfaces.Function;
+import me.cassiano.vettsel.interfaces.PartialSolution;
 import me.cassiano.vettsel.interfaces.Restriction;
+
+import static me.cassiano.vettsel.SimplexTable.BREAK_FLAG;
+import static me.cassiano.vettsel.SimplexTable.SOLUTION_UNLIMITED_FLAG;
 
 public class VettselSimplex {
 
@@ -23,36 +28,61 @@ public class VettselSimplex {
     }
 
 
-    public SolutionStatus run(Function function, List<Restriction> restrictions) {
+    public PartialSolution run(Function function, List<Restriction> restrictions) {
 
         table = new SimplexTable(function, restrictions);
-        firstPhase();
 
-        return SolutionStatus.IMPOSSIBLE;
+        try {
+            firstPhase();
+            secondPhase();
+        } catch (ImpossibleSolutionException e) {
+            return PartialSolutionImpl.impossible();
+        } catch (UnlimitedSolutionException e) {
+            return PartialSolutionImpl.unlimited();
+        }
+
+        return PartialSolutionImpl.optimal(table.getSolutionVariables());
     }
 
-    private SolutionStatus firstPhase() {
+    private void firstPhase() throws ImpossibleSolutionException {
 
         int negativePosition;
 
-        while ((negativePosition = table.getNegativeFreeMemberPosition()) != -1) {
+        while ((negativePosition = table.getNegativeFreeMemberPosition()) != BREAK_FLAG) {
 
             int permissibleColumn = table.getPermissibleColumnPosition(negativePosition);
 
             if (permissibleColumn == -1)
-                return SolutionStatus.IMPOSSIBLE;
+                throw new ImpossibleSolutionException();
 
             int permissibleLine = table.getPermissibleLineElementPosition(permissibleColumn);
-
             table.runSwapAlgorithm(permissibleLine, permissibleColumn);
         }
+    }
 
-        return SolutionStatus.OPTIMAL;
+    private void secondPhase() throws UnlimitedSolutionException {
+
+        int permissibleColumn;
+
+        while ((permissibleColumn = table.getPositiveFunctionValuePosition()) != BREAK_FLAG) {
+
+            if (permissibleColumn == SOLUTION_UNLIMITED_FLAG)
+                throw new UnlimitedSolutionException();
+
+            int permissibleLine = table.getPermissibleLineElementPosition(permissibleColumn);
+            table.runSwapAlgorithm(permissibleLine, permissibleColumn);
+
+        }
+
     }
 
 
-    public enum SolutionStatus {
-        UNLIMITED, IMPOSSIBLE, MULTIPLE_SOLUTIONS, OPTIMAL
+    public class ImpossibleSolutionException extends Exception {
+
+    }
+
+    public class UnlimitedSolutionException extends Exception {
+
     }
 
 }
