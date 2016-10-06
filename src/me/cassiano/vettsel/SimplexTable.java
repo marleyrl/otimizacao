@@ -123,13 +123,19 @@ public class SimplexTable {
     public int getPositiveFunctionValuePosition() {
 
         int position = IntStream
-                .range(0, table.columns())
+                .range(1, table.columns())
                 .filter(x -> table.getCell(0, x).getUpper() >= 0)
                 .findAny()
                 .orElse(BREAK_FLAG);
 
-        if (position == 0)
-            position = SOLUTION_UNLIMITED_FLAG;
+        if (position >= 0) {
+
+            position = IntStream
+                    .range(1, table.columns())
+                    .filter(x -> table.getCell(0, x).getUpper() > 0)
+                    .findAny()
+                    .orElse(SOLUTION_UNLIMITED_FLAG);
+        }
 
         return position;
     }
