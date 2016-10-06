@@ -187,8 +187,6 @@ public class SimplexTable {
                 cell.setLower(null);
             }
         }
-
-        printTable();
     }
 
     private void swapUpperLowerForSelected(int line, int column) {

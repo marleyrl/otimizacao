@@ -1,6 +1,5 @@
 package me.cassiano.vettsel.implementation;
 
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import me.cassiano.vettsel.enumerations.SolutionStatus;
@@ -15,6 +14,18 @@ public class PartialSolutionImpl implements PartialSolution {
     public PartialSolutionImpl(SolutionStatus status, double[] values) {
         this.status = status;
         this.values = values;
+    }
+
+    public static PartialSolution impossible() {
+        return new PartialSolutionImpl(SolutionStatus.IMPOSSIBLE, null);
+    }
+
+    public static PartialSolution optimal(double variables[]) {
+        return new PartialSolutionImpl(SolutionStatus.OPTIMAL, variables);
+    }
+
+    public static PartialSolution unlimited() {
+        return new PartialSolutionImpl(SolutionStatus.UNLIMITED, null);
     }
 
     @Override
@@ -48,17 +59,5 @@ public class PartialSolutionImpl implements PartialSolution {
 
     public boolean isOptimal() {
         return status == SolutionStatus.OPTIMAL;
-    }
-
-    public static PartialSolution impossible() {
-        return new PartialSolutionImpl(SolutionStatus.IMPOSSIBLE, null);
-    }
-
-    public static PartialSolution optimal(double variables[]) {
-        return new PartialSolutionImpl(SolutionStatus.OPTIMAL, variables);
-    }
-
-    public static PartialSolution unlimited() {
-        return new PartialSolutionImpl(SolutionStatus.UNLIMITED, null);
     }
 }

@@ -28,13 +28,13 @@ public class CellImpl implements Cell {
     }
 
     @Override
-    public Double getLower() {
-        return lower;
+    public void setUpper(Double value) {
+        this.upper = value;
     }
 
     @Override
-    public void setUpper(Double value) {
-        this.upper = value;
+    public Double getLower() {
+        return lower;
     }
 
     @Override

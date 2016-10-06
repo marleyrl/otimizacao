@@ -1,7 +1,5 @@
 package me.cassiano.vettsel.interfaces;
 
-import java.util.stream.Stream;
-
 public interface Table {
 
     Cell getCell(int line, int column);
