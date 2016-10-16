@@ -36,12 +36,12 @@ public class VettselSimplex {
             firstPhase();
             secondPhase();
         } catch (ImpossibleSolutionException e) {
-            table.printTable();
             return PartialSolutionImpl.impossible();
         } catch (UnlimitedSolutionException e) {
-            table.printTable();
             return PartialSolutionImpl.unlimited();
         }
+
+        table.printTable();
 
         return PartialSolutionImpl.optimal(table.getSolutionVariables());
     }
