@@ -1,8 +1,9 @@
-package me.cassiano.vettsel;
+package me.cassiano.vetwebservice;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.cassiano.vettsel.VettselSimplex;
 import me.cassiano.vettsel.interfaces.Function;
 import me.cassiano.vettsel.interfaces.Restriction;
 
