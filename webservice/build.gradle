@@ -1,0 +1,14 @@
+apply plugin: 'application'
+mainClassName = 'me.cassiano.vetwebservice.Main'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile project(':simplex')
+	compile "com.sparkjava:spark-core:2.5"
+}
