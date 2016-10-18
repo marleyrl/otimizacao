@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/vettsel.iml" filepath="$PROJECT_DIR$/vettsel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simplex.iml" filepath="$PROJECT_DIR$/simplex.iml" />
       <module fileurl="file://$PROJECT_DIR$/webservice/webservice.iml" filepath="$PROJECT_DIR$/webservice/webservice.iml" />
     </modules>
   </component>
