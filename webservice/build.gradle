@@ -10,5 +10,7 @@ repositories {
 
 dependencies {
 	compile project(':simplex')
-	compile "com.sparkjava:spark-core:2.5"
+	compile 'com.google.code.gson:gson:2.2.+'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+    compile "com.sparkjava:spark-core:2.5"
 }

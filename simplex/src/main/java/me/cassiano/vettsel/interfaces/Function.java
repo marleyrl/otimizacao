@@ -17,6 +17,29 @@ public interface Function {
     boolean isMin();
 
     enum Operation {
-        MAX, MIN
+
+        MAX("max"), MIN("min");
+
+        private String text;
+
+        Operation(String text) {
+            this.text = text;
+        }
+
+        public static Operation fromString(String text) {
+
+            if (text != null) {
+                for (Operation b : Operation.values()) {
+                    if (text.equalsIgnoreCase(b.text)) {
+                        return b;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public String getText() {
+            return this.text;
+        }
     }
 }

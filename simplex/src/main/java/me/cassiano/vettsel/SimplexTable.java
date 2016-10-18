@@ -21,13 +21,13 @@ public class SimplexTable {
 
     private Table table;
     private Function function;
-    private List<Restriction> restrictions;
+    private List<? extends Restriction> restrictions;
 
     private int[] basic;
     private int[] nonBasic;
 
     public SimplexTable(Function function,
-                        List<Restriction> restrictions) {
+                        List<? extends Restriction> restrictions) {
         this.function = function;
         this.restrictions = restrictions;
 
@@ -54,9 +54,10 @@ public class SimplexTable {
 
         /* (0,0) should be 0 now */
         table.setCell(0, 0, new CellImpl(0.0, null));
+        int multiplier = function.isMax() ? 1 : -1;
 
         for (int i = 1; i < function.size(); i++) {
-            Cell newCell = new CellImpl(function.getCoeficient(i), null);
+            Cell newCell = new CellImpl(multiplier * function.getCoeficient(i), null);
             table.setCell(0, i, newCell);
         }
 
@@ -68,13 +69,14 @@ public class SimplexTable {
 
             /* (i - 1): extra line for the f(x) values */
             Restriction restriction = restrictions.get(i - 1);
+            int multiplier = restriction.getType() == Restriction.Type.GREATER_THAN ? -1 : 1;
 
             /* filling up free members */
-            table.setCell(i, 0, new CellImpl(restriction.getCoeficient(0), null));
+            table.setCell(i, 0, new CellImpl(multiplier * restriction.getCoeficient(0), null));
 
             /* filling up non basic vars */
             for (int j = 1; j < table.columns(); j++)
-                table.setCell(i, j, new CellImpl(restriction.getCoeficient(j), null));
+                table.setCell(i, j, new CellImpl(multiplier * restriction.getCoeficient(j), null));
         }
 
     }

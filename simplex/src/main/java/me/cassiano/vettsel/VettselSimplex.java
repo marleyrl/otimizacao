@@ -28,7 +28,7 @@ public class VettselSimplex {
     }
 
 
-    public PartialSolution run(Function function, List<Restriction> restrictions) {
+    public PartialSolution run(Function function, List<? extends Restriction> restrictions) {
 
         table = new SimplexTable(function, restrictions);
 
@@ -40,8 +40,6 @@ public class VettselSimplex {
         } catch (UnlimitedSolutionException e) {
             return PartialSolutionImpl.unlimited();
         }
-
-        table.printTable();
 
         return PartialSolutionImpl.optimal(table.getSolutionVariables());
     }
