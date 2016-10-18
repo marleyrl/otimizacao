@@ -10,6 +10,8 @@ public class Main {
 
     public static void main(String[] args) {
 
+        Spark.get("/", (request, response) -> "hello!");
+
         Spark.post("/xp", (request, response) -> {
 
             ParsedRequest parsedRequest =
