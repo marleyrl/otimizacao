@@ -27,9 +27,18 @@ public class SimplexTable {
     private int[] nonBasic;
 
     public SimplexTable(Function function,
-                        List<? extends Restriction> restrictions) {
+                        List<? extends Restriction> restrictions) throws VariableSizesDontMatch {
+
+        boolean allSameSize = IntStream
+                .range(0, restrictions.size())
+                .allMatch(i -> function.size() == restrictions.get(i).size());
+
+        if (!allSameSize)
+            throw new VariableSizesDontMatch();
+
         this.function = function;
         this.restrictions = restrictions;
+
 
         this.nonBasic = IntStream
                 .range(0, function.size() - 1)
@@ -57,7 +66,7 @@ public class SimplexTable {
         int multiplier = function.isMax() ? 1 : -1;
 
         for (int i = 1; i < function.size(); i++) {
-            Cell newCell = new CellImpl(multiplier * function.getCoeficient(i), null);
+            Cell newCell = new CellImpl(multiplier * function.getCoefficient(i), null);
             table.setCell(0, i, newCell);
         }
 
@@ -72,11 +81,11 @@ public class SimplexTable {
             int multiplier = restriction.getType() == Restriction.Type.GREATER_THAN ? -1 : 1;
 
             /* filling up free members */
-            table.setCell(i, 0, new CellImpl(multiplier * restriction.getCoeficient(0), null));
+            table.setCell(i, 0, new CellImpl(multiplier * restriction.getCoefficient(0), null));
 
             /* filling up non basic vars */
             for (int j = 1; j < table.columns(); j++)
-                table.setCell(i, j, new CellImpl(multiplier * restriction.getCoeficient(j), null));
+                table.setCell(i, j, new CellImpl(multiplier * restriction.getCoefficient(j), null));
         }
 
     }
@@ -307,5 +316,14 @@ public class SimplexTable {
 
     public void printTable() {
         ((TableImpl) table).print();
+    }
+
+    public class VariableSizesDontMatch extends Throwable {
+
+        @Override
+        public String getMessage() {
+            return "The number of coefficients of the function doesn't" +
+                    " match the number of coefficients in the restrictions";
+        }
     }
 }

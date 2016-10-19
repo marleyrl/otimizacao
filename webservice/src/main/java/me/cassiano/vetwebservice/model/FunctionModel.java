@@ -21,7 +21,7 @@ public class FunctionModel implements Function {
     }
 
     @Override
-    public double getCoeficient(int index) {
+    public double getCoefficient(int index) {
 
         if (index == 0)
             return 0;
@@ -30,7 +30,7 @@ public class FunctionModel implements Function {
     }
 
     @Override
-    public void setCoeficient(int index, double value) {
+    public void setCoefficient(int index, double value) {
 
         if (index == 0)
             return;

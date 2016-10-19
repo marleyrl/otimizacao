@@ -2,9 +2,9 @@ package me.cassiano.vettsel.interfaces;
 
 public interface Function {
 
-    double getCoeficient(int index);
+    double getCoefficient(int index);
 
-    void setCoeficient(int index, double value);
+    void setCoefficient(int index, double value);
 
     int size();
 

@@ -19,7 +19,7 @@ public class RestrictionModel implements Restriction {
     private double value;
 
     @Override
-    public double getCoeficient(int index) {
+    public double getCoefficient(int index) {
 
         if (index == 0)
             return value;
@@ -28,7 +28,7 @@ public class RestrictionModel implements Restriction {
     }
 
     @Override
-    public void setCoeficient(int index, double value) {
+    public void setCoefficient(int index, double value) {
 
         if (value == 0)
             return;

@@ -28,7 +28,8 @@ public class VettselSimplex {
     }
 
 
-    public PartialSolution run(Function function, List<? extends Restriction> restrictions) {
+    public PartialSolution run(Function function, List<? extends Restriction> restrictions)
+            throws SimplexTable.VariableSizesDontMatch {
 
         table = new SimplexTable(function, restrictions);
 
