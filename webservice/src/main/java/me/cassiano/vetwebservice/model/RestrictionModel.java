@@ -9,8 +9,8 @@ import me.cassiano.vettsel.interfaces.Restriction;
 
 public class RestrictionModel implements Restriction {
 
-    @SerializedName("coeficients")
-    private List<Double> coeficients;
+    @SerializedName("coefficients")
+    private List<Double> coefficients;
 
     @SerializedName("type")
     private String type;
@@ -24,7 +24,7 @@ public class RestrictionModel implements Restriction {
         if (index == 0)
             return value;
 
-        return coeficients.get(index - 1);
+        return coefficients.get(index - 1);
     }
 
     @Override
@@ -33,12 +33,12 @@ public class RestrictionModel implements Restriction {
         if (value == 0)
             return;
 
-        coeficients.set(index - 1, value);
+        coefficients.set(index - 1, value);
     }
 
     @Override
     public int size() {
-        return coeficients.size() + 1;
+        return coefficients.size() + 1;
     }
 
     @Override

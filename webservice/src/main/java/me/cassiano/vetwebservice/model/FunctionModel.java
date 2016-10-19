@@ -9,14 +9,14 @@ import me.cassiano.vettsel.interfaces.Function;
 
 public class FunctionModel implements Function {
 
-    @SerializedName("coeficients")
-    private List<Double> coeficients;
+    @SerializedName("coefficients")
+    private List<Double> coefficients;
 
     @SerializedName("operation")
     private String operation;
 
-    public FunctionModel(List<Double> coeficients, String operation) {
-        this.coeficients = coeficients;
+    public FunctionModel(List<Double> coefficients, String operation) {
+        this.coefficients = coefficients;
         this.operation = operation;
     }
 
@@ -26,7 +26,7 @@ public class FunctionModel implements Function {
         if (index == 0)
             return 0;
 
-        return coeficients.get(index - 1);
+        return coefficients.get(index - 1);
     }
 
     @Override
@@ -35,12 +35,12 @@ public class FunctionModel implements Function {
         if (index == 0)
             return;
 
-        coeficients.set(index - 1, value);
+        coefficients.set(index - 1, value);
     }
 
     @Override
     public int size() {
-        return coeficients.size() + 1;
+        return coefficients.size() + 1;
     }
 
     @Override
