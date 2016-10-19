@@ -2,6 +2,7 @@ package me.cassiano.vetwebservice;
 
 import me.cassiano.vettsel.VettselSimplex;
 import me.cassiano.vettsel.interfaces.PartialSolution;
+import me.cassiano.vetwebservice.model.ErrorResponse;
 import me.cassiano.vetwebservice.model.ParsedRequest;
 import me.cassiano.vetwebservice.model.SolutionResponse;
 import spark.Spark;
@@ -14,16 +15,29 @@ public class Main {
 
         Spark.post("/xp", (request, response) -> {
 
-            ParsedRequest parsedRequest =
-                    ParsedRequest.parse(request.body());
+            String responseStr = null;
 
-            PartialSolution partialSolution = VettselSimplex.get().run(
-                    parsedRequest.getFunction(), parsedRequest.getRestrictions());
+            try {
 
-            response.status(200);
+                ParsedRequest parsedRequest =
+                        ParsedRequest.parse(request.body());
+
+                PartialSolution partialSolution = VettselSimplex.get().run(
+                        parsedRequest.getFunction(), parsedRequest.getRestrictions());
+
+                responseStr = SolutionResponse.fromSolution(partialSolution).toJson();
+
+                response.status(200);
+
+            } catch (Throwable throwable) {
+                response.status(400);
+                responseStr = new ErrorResponse(throwable).toJson();
+            }
+
+
             response.type("application/json");
 
-            return SolutionResponse.fromSolution(partialSolution).toJson();
+            return responseStr;
         });
     }
 
