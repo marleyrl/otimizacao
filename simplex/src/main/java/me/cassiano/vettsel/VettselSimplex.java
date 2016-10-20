@@ -13,18 +13,13 @@ import static me.cassiano.vettsel.SimplexTable.SOLUTION_UNLIMITED_FLAG;
 
 public class VettselSimplex {
 
-    private static VettselSimplex instance;
-    private static SimplexTable table;
+    private SimplexTable table;
 
     private VettselSimplex() {
     }
 
     public static VettselSimplex get() {
-
-        if (instance == null)
-            instance = new VettselSimplex();
-
-        return instance;
+        return new VettselSimplex();
     }
 
 
