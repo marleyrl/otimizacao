@@ -37,6 +37,7 @@ public class VettselSimplex {
             return PartialSolutionImpl.unlimited();
         }
 
+        table.printTable();
         return PartialSolutionImpl.optimal(table.getSolutionVariables());
     }
 

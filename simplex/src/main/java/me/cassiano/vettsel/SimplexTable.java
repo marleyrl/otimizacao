@@ -121,6 +121,9 @@ public class SimplexTable {
 
     public int getPermissibleLineElementPosition(int column) {
 
+        /* loop through the rows, taking out upper cells with value 0 */
+        /* and making sure the signs are equal, then gets the min value */
+
         return IntStream
                 .range(1, table.rows())
                 .filter(i -> table.getCell(i, column).getUpper() != 0)
@@ -132,6 +135,11 @@ public class SimplexTable {
     }
 
     public int getPositiveFunctionValuePosition() {
+
+        /* using the columns, tries to find elements with value >=0
+           if it finds any, checks for 0 (unlimited solution) or
+           returns the position of the positive function value
+         */
 
         int position = IntStream
                 .range(1, table.columns())

@@ -25,6 +25,7 @@ public class Main {
                 PartialSolution partialSolution = VettselSimplex.get().run(
                         parsedRequest.getFunction(), parsedRequest.getRestrictions());
 
+
                 responseStr = SolutionResponse.fromSolution(partialSolution).toJson();
 
                 response.status(200);
